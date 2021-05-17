@@ -93,7 +93,7 @@ func ServeExternal(logger *logrus.Logger) error {
 				runtime.WithIncomingHeaderMatcher(gateway.AtlasDefaultHeaderMatcher()),
 			),
 			gateway.WithServerAddress(fmt.Sprintf("%s:%s", viper.GetString("server.address"), viper.GetString("server.port"))),
-			gateway.WithEndpointRegistration(viper.GetString("gateway.endpoint"), pb.RegisterHackDbHandlerFromEndpoint),
+			gateway.WithEndpointRegistration(viper.GetString("gateway.endpoint"), pb.RegisterSubmissionsHandlerFromEndpoint),
 		),
 		server.WithHandler("/swagger/", NewSwaggerHandler(viper.GetString("gateway.swaggerFile"))),
 	)
