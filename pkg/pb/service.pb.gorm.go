@@ -26,10 +26,14 @@ It has these top-level messages:
 	CreateTagResponse
 	ListTagRequest
 	ListTagResponse
+	ReadTagRequest
+	ReadTagResponse
 	CreateCommentRequest
 	CreateCommentResponse
 	ListCommentRequest
 	ListCommentResponse
+	ReadCommentRequest
+	ReadCommentResponse
 */
 package pb
 
@@ -1651,6 +1655,46 @@ type TagsTagWithBeforeList interface {
 type TagsTagWithAfterList interface {
 	AfterList(context.Context, *ListTagResponse, *gorm1.DB) error
 }
+
+// Read ...
+func (m *TagsDefaultServer) Read(ctx context.Context, in *ReadTagRequest) (*ReadTagResponse, error) {
+	txn, ok := gorm2.FromContext(ctx)
+	if !ok {
+		return nil, errors1.NoTransactionError
+	}
+	db := txn.Begin()
+	if db.Error != nil {
+		return nil, db.Error
+	}
+	if custom, ok := interface{}(in).(TagsTagWithBeforeRead); ok {
+		var err error
+		if db, err = custom.BeforeRead(ctx, db); err != nil {
+			return nil, err
+		}
+	}
+	res, err := DefaultReadTag(ctx, &Tag{Id: in.GetId()}, db)
+	if err != nil {
+		return nil, err
+	}
+	out := &ReadTagResponse{Result: res}
+	if custom, ok := interface{}(in).(TagsTagWithAfterRead); ok {
+		var err error
+		if err = custom.AfterRead(ctx, out, db); err != nil {
+			return nil, err
+		}
+	}
+	return out, nil
+}
+
+// TagsTagWithBeforeRead called before DefaultReadTag in the default Read handler
+type TagsTagWithBeforeRead interface {
+	BeforeRead(context.Context, *gorm1.DB) (*gorm1.DB, error)
+}
+
+// TagsTagWithAfterRead called before DefaultReadTag in the default Read handler
+type TagsTagWithAfterRead interface {
+	AfterRead(context.Context, *ReadTagResponse, *gorm1.DB) error
+}
 type CommentsDefaultServer struct {
 }
 
@@ -1732,4 +1776,44 @@ type CommentsCommentWithBeforeList interface {
 // CommentsCommentWithAfterList called before DefaultListComment in the default List handler
 type CommentsCommentWithAfterList interface {
 	AfterList(context.Context, *ListCommentResponse, *gorm1.DB) error
+}
+
+// Read ...
+func (m *CommentsDefaultServer) Read(ctx context.Context, in *ReadCommentRequest) (*ReadCommentResponse, error) {
+	txn, ok := gorm2.FromContext(ctx)
+	if !ok {
+		return nil, errors1.NoTransactionError
+	}
+	db := txn.Begin()
+	if db.Error != nil {
+		return nil, db.Error
+	}
+	if custom, ok := interface{}(in).(CommentsCommentWithBeforeRead); ok {
+		var err error
+		if db, err = custom.BeforeRead(ctx, db); err != nil {
+			return nil, err
+		}
+	}
+	res, err := DefaultReadComment(ctx, &Comment{Id: in.GetId()}, db)
+	if err != nil {
+		return nil, err
+	}
+	out := &ReadCommentResponse{Result: res}
+	if custom, ok := interface{}(in).(CommentsCommentWithAfterRead); ok {
+		var err error
+		if err = custom.AfterRead(ctx, out, db); err != nil {
+			return nil, err
+		}
+	}
+	return out, nil
+}
+
+// CommentsCommentWithBeforeRead called before DefaultReadComment in the default Read handler
+type CommentsCommentWithBeforeRead interface {
+	BeforeRead(context.Context, *gorm1.DB) (*gorm1.DB, error)
+}
+
+// CommentsCommentWithAfterRead called before DefaultReadComment in the default Read handler
+type CommentsCommentWithAfterRead interface {
+	AfterRead(context.Context, *ReadCommentResponse, *gorm1.DB) error
 }

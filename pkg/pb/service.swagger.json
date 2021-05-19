@@ -41,6 +41,30 @@
         }
       }
     },
+    "/comment/{id.value}": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "operationId": "CommentsRead",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id.value",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET operation response",
+            "schema": {
+              "$ref": "#/definitions/serviceReadCommentResponse"
+            }
+          }
+        }
+      }
+    },
     "/comment/{tool_id.value}": {
       "get": {
         "tags": [
@@ -138,6 +162,30 @@
             "description": "POST operation response",
             "schema": {
               "$ref": "#/definitions/serviceCreateTagResponse"
+            }
+          }
+        }
+      }
+    },
+    "/tag/{id.value}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "operationId": "TagsRead",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id.value",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET operation response",
+            "schema": {
+              "$ref": "#/definitions/serviceReadTagResponse"
             }
           }
         }
@@ -351,6 +399,22 @@
           "items": {
             "$ref": "#/definitions/serviceTool"
           }
+        }
+      }
+    },
+    "serviceReadCommentResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/serviceComment"
+        }
+      }
+    },
+    "serviceReadTagResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/serviceTag"
         }
       }
     },

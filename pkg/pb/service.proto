@@ -11,6 +11,8 @@ import "github.com/infobloxopen/protoc-gen-gorm/types/types.proto";
 
 option go_package = "github.com/brocwoodworthIBLX/hack-db/pkg/pb;pb";
 
+// ------------------- Messages -------------------
+
 message Tool {
   option (gorm.opts).ormable = true;
   gorm.types.UUIDValue id = 1;
@@ -93,6 +95,14 @@ message ListTagResponse {
   repeated Tag results = 1;
 }
 
+message ReadTagRequest {
+  gorm.types.UUIDValue id = 1;
+}
+
+message ReadTagResponse {
+  Tag result = 1;
+}
+
 message CreateCommentRequest {
   Comment payload = 1;
 }
@@ -108,6 +118,18 @@ message ListCommentRequest {
 message ListCommentResponse {
   repeated Comment results = 1;
 }
+
+message ReadCommentRequest {
+  gorm.types.UUIDValue id = 1;
+}
+
+message ReadCommentResponse {
+  Comment result = 1;
+}
+
+// ------------------- Services -------------------
+
+// Tools
 
 service Tools {
   option (gorm.server) = {
@@ -142,6 +164,8 @@ service Tools {
   }
 }
 
+// Tags
+
 service Tags {
   option (gorm.server) = {
     autogen: true,
@@ -160,7 +184,15 @@ service Tags {
       get: "/tag"
     };
   }
+
+  rpc Read(ReadTagRequest) returns (ReadTagResponse) {
+    option (google.api.http) = {
+      get: "/tag/{id.value}"
+    };
+  }
 }
+
+// Comments
 
 service Comments {
   option (gorm.server) = {
@@ -178,6 +210,12 @@ service Comments {
   rpc List(ListCommentRequest) returns (ListCommentResponse) {
     option (google.api.http) = {
       get: "/comment/{tool_id.value}"
+    };
+  }
+
+  rpc Read(ReadCommentRequest) returns (ReadCommentResponse) {
+    option (google.api.http) = {
+      get: "/comment/{id.value}"
     };
   }
 }
