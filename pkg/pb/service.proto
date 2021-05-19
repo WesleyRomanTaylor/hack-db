@@ -11,80 +11,211 @@ import "github.com/infobloxopen/protoc-gen-gorm/types/types.proto";
 
 option go_package = "github.com/brocwoodworthIBLX/hack-db/pkg/pb;pb";
 
-message Submission {
+// ------------------- Messages -------------------
+
+message Tool {
   option (gorm.opts).ormable = true;
   gorm.types.UUIDValue id = 1;
   string title = 2;
-  string submission = 3;
-  string submitted_by = 4;
-  string tags = 5;
-  int32 votes = 6;
+  string tool_code = 3;
+  string created_by = 4;
+  string description = 5;
+  repeated string tags = 6;
+  repeated string comments = 7;
+  int32 vote_count = 8;
+  int32 broken_count = 9;
 }
 
-message CreateSubmissionRequest {
-  Submission payload = 1;
+message Tag {
+  option (gorm.opts).ormable = true;
+  gorm.types.UUIDValue id = 1;
+  string name = 2;
+  repeated gorm.types.UUIDValue tool_id = 3;
 }
 
-message CreateSubmissionResponse {
-  Submission result = 1;
+message Comment {
+  option (gorm.opts).ormable = true;
+  gorm.types.UUIDValue id = 1;
+  string comment = 2;
+  string created_by = 3;
+  gorm.types.UUIDValue tool_id = 4;
 }
 
-message ListSubmissionRequest {
+message CreateToolRequest {
+  Tool payload = 1;
+}
+
+message CreateToolResponse {
+  Tool result = 1;
+}
+
+message ListToolRequest {
   infoblox.api.Filtering filter = 1;
   infoblox.api.Sorting order_by = 2;
   infoblox.api.FieldSelection fields = 3;
   infoblox.api.Pagination paging = 4;
 }
 
-message ListSubmissionResponse {
-  repeated Submission results = 1;
+message ListToolResponse {
+  repeated Tool results = 1;
 }
 
-message ReadSubmissionRequest {
+message ReadToolRequest {
   gorm.types.UUIDValue id = 1;
 }
 
-message ReadSubmissionResponse {
-  Submission result = 1;
+message ReadToolResponse {
+  Tool result = 1;
 }
 
-message UpdateSubmissionRequest {
-  Submission payload = 1;
+message UpdateToolRequest {
+  Tool payload = 1;
 }
 
-message UpdateSubmissionResponse {
-  Submission result = 1;
+message UpdateToolResponse {
+  Tool result = 1;
 }
 
-service Submissions {
+message CreateTagRequest {
+  Tag payload = 1;
+}
+
+message CreateTagResponse {
+  Tag result = 1;
+}
+
+message ListTagRequest {
+  infoblox.api.Filtering filter = 1;
+  infoblox.api.Sorting order_by = 2;
+  infoblox.api.FieldSelection fields = 3;
+  infoblox.api.Pagination paging = 4;
+}
+
+message ListTagResponse {
+  repeated Tag results = 1;
+}
+
+message ReadTagRequest {
+  gorm.types.UUIDValue id = 1;
+}
+
+message ReadTagResponse {
+  Tag result = 1;
+}
+
+message CreateCommentRequest {
+  Comment payload = 1;
+}
+
+message CreateCommentResponse {
+  Comment result = 1;
+}
+
+message ListCommentRequest {
+  gorm.types.UUIDValue tool_id = 1;
+}
+
+message ListCommentResponse {
+  repeated Comment results = 1;
+}
+
+message ReadCommentRequest {
+  gorm.types.UUIDValue id = 1;
+}
+
+message ReadCommentResponse {
+  Comment result = 1;
+}
+
+// ------------------- Services -------------------
+
+// Tools
+
+service Tools {
   option (gorm.server) = {
     autogen: true,
     txn_middleware: true,
   };
 
-  rpc Create (CreateSubmissionRequest) returns (CreateSubmissionResponse) {
+  rpc Create (CreateToolRequest) returns (CreateToolResponse) {
     option (google.api.http) = {
-      post: "/submit"
+      post: "/tool"
       body: "payload"
     };
   }
 
-  rpc Update (UpdateSubmissionRequest) returns (UpdateSubmissionResponse) {
+  rpc Update (UpdateToolRequest) returns (UpdateToolResponse) {
     option (google.api.http) = {
-      patch: "/submit/{payload.id.value}"
+      patch: "/tool/{payload.id.value}"
       body: "payload"
     };
   }
 
-  rpc Read(ReadSubmissionRequest) returns (ReadSubmissionResponse) {
+  rpc Read(ReadToolRequest) returns (ReadToolResponse) {
     option (google.api.http) = {
-      get: "/submissions/{id.value}"
+      get: "/tool/{id.value}"
     };
   }
 
-  rpc List(ListSubmissionRequest) returns (ListSubmissionResponse) {
+  rpc List(ListToolRequest) returns (ListToolResponse) {
     option (google.api.http) = {
-      get: "/submissions"
+      get: "/tool"
+    };
+  }
+}
+
+// Tags
+
+service Tags {
+  option (gorm.server) = {
+    autogen: true,
+    txn_middleware: true,
+  };
+
+  rpc Create (CreateTagRequest) returns (CreateTagResponse) {
+    option (google.api.http) = {
+      post: "/tag"
+      body: "payload"
+    };
+  }
+
+  rpc List(ListTagRequest) returns (ListTagResponse) {
+    option (google.api.http) = {
+      get: "/tag"
+    };
+  }
+
+  rpc Read(ReadTagRequest) returns (ReadTagResponse) {
+    option (google.api.http) = {
+      get: "/tag/{id.value}"
+    };
+  }
+}
+
+// Comments
+
+service Comments {
+  option (gorm.server) = {
+    autogen: true,
+    txn_middleware: true,
+  };
+
+  rpc Create (CreateCommentRequest) returns (CreateCommentResponse) {
+    option (google.api.http) = {
+      post: "/comment"
+      body: "payload"
+    };
+  }
+
+  rpc List(ListCommentRequest) returns (ListCommentResponse) {
+    option (google.api.http) = {
+      get: "/comment/{tool_id.value}"
+    };
+  }
+
+  rpc Read(ReadCommentRequest) returns (ReadCommentResponse) {
+    option (google.api.http) = {
+      get: "/comment/{id.value}"
     };
   }
 }
