@@ -11,5 +11,4 @@ CREATE TABLE comments (
         created_by text NOT NULL,
         tool_id UUID NOT NULL
         created_at timestamptz NOT NULL DEFAULT current_timestamp,
-        CONSTRAINT tool_fk FOREIGN KEY (tool_id) REFERENCES tools(id),
 )
