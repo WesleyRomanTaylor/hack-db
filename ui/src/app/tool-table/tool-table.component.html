@@ -2,40 +2,52 @@
   <tag-filter></tag-filter>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 tool-table">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
     </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    <!-- Tags Column -->
+    <ng-container matColumnDef="tags">
+      <th mat-header-cell *matHeaderCellDef> Tags </th>
+      <td mat-cell *matCellDef="let element"> {{element.tags.join(",")}} </td>
     </ng-container>
 
-    <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef> Weight </th>
-      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    <!-- Created By Column -->
+    <ng-container matColumnDef="created_by">
+      <th mat-header-cell *matHeaderCellDef> Created By </th>
+      <td mat-cell *matCellDef="let element"> {{element.created_by}} </td>
     </ng-container>
 
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
-      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    <!-- Vote Count Column -->
+    <ng-container matColumnDef="vote_count">
+      <th mat-header-cell *matHeaderCellDef> <mat-icon>grade</mat-icon> </th>
+      <td mat-cell *matCellDef="let element"> {{element.vote_count}} </td>
+    </ng-container>
+
+    <!-- Broken Count Column -->
+    <ng-container matColumnDef="broken_count">
+      <th mat-header-cell *matHeaderCellDef> <mat-icon>dangerous</mat-icon> </th>
+      <td mat-cell *matCellDef="let element"> {{element.broken_count}} </td>
     </ng-container>
 
     <!-- View Column -->
     <ng-container matColumnDef="view">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element"> <button (click)="openDialog(element)">View</button> </td>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button aria-label="Edit button" (click)="openDialog(element)">
+          <mat-icon>description</mat-icon>
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+
 </div>
