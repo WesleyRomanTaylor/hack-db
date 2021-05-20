@@ -21,9 +21,8 @@ message Tool {
   string created_by = 4;
   string description = 5;
   repeated string tags = 6;
-  repeated string comments = 7;
-  int32 vote_count = 8;
-  int32 broken_count = 9;
+  int32 vote_count = 7;
+  int32 broken_count = 8;
 }
 
 message Tag {
