@@ -451,12 +451,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "comments": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "created_by": {
           "type": "string"
         },

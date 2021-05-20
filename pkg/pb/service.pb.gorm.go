@@ -94,7 +94,6 @@ func (m *Tool) ToORM(ctx context.Context) (ToolORM, error) {
 	to.CreatedBy = m.CreatedBy
 	to.Description = m.Description
 	// Repeated type []string is not an ORMable message type
-	// Repeated type []string is not an ORMable message type
 	to.VoteCount = m.VoteCount
 	to.BrokenCount = m.BrokenCount
 	if posthook, ok := interface{}(m).(ToolWithAfterToORM); ok {
@@ -120,7 +119,6 @@ func (m *ToolORM) ToPB(ctx context.Context) (Tool, error) {
 	to.ToolCode = m.ToolCode
 	to.CreatedBy = m.CreatedBy
 	to.Description = m.Description
-	// Repeated type []string is not an ORMable message type
 	// Repeated type []string is not an ORMable message type
 	to.VoteCount = m.VoteCount
 	to.BrokenCount = m.BrokenCount
@@ -626,10 +624,6 @@ func DefaultApplyFieldMaskTool(ctx context.Context, patchee *Tool, patcher *Tool
 		}
 		if f == prefix+"Tags" {
 			patchee.Tags = patcher.Tags
-			continue
-		}
-		if f == prefix+"Comments" {
-			patchee.Comments = patcher.Comments
 			continue
 		}
 		if f == prefix+"VoteCount" {
