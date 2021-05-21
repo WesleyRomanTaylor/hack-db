@@ -50,7 +50,6 @@ import types1 "github.com/infobloxopen/protoc-gen-gorm/types"
 
 import math "math"
 import _ "google.golang.org/genproto/googleapis/api/annotations"
-import _ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options"
 import _ "github.com/infobloxopen/atlas-app-toolkit/query"
 
 // Reference imports to suppress errors if they are not otherwise used.

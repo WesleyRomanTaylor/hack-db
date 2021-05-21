@@ -1,0 +1,5 @@
+#dependencies:
+#- name: atlas-authz-service
+#  version: 0.1.0
+#  condition: manifest.values.atlas_authz_service.enabled
+#  repository: http://localhost:8879/charts

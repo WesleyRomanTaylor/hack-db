@@ -3,7 +3,6 @@ syntax = "proto3";
 package service;
 
 import "google/api/annotations.proto";
-import "protoc-gen-swagger/options/annotations.proto";
 
 import "github.com/infobloxopen/atlas-app-toolkit/query/collection_operators.proto";
 import "github.com/infobloxopen/protoc-gen-gorm/options/gorm.proto";

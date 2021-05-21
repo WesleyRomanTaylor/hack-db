@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hackdb.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ include "hackdb.name" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ include "hackdb.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        name: {{ include "hackdb.name" . }}
+        release: {{ .Release.Name }}
+        application: {{ tpl .Values.config.appId . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.Version }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          args:
+            - "--server.address={{ .Values.server.address }}"
+            - "--server.port={{ .Values.server.port }}"
+
+            - "--gateway.enable={{ .Values.gateway.enable }}"
+            - "--gateway.address={{ .Values.gateway.address }}"
+            - "--gateway.port={{ .Values.gateway.port }}"
+            - "--gateway.endpoint={{ .Values.gateway.endpoint }}"
+            - "--gateway.swaggerFile={{ .Values.gateway.swaggerFile }}"
+
+            - "--database.enable={{ .Values.db.enable }}"
+            - "--database.dsn=$(dsn)"
+            - "--database.type={{ .Values.db.type }}"
+            - "--database.address={{ include "hackdb.fullname" . }}-postgres"
+            - "--database.port={{ .Values.db.port }}"
+            - "--database.name={{ .Values.db.database }}"
+            - "--database.user={{ .Values.db.username }}"
+            - "--database.password={{ .Values.db.password }}"
+            - "--database.ssl={{ .Values.db.sslMode }}"
+            - "--database.option={{ .Values.db.option }}"
+
+            - "--internal.enable={{ .Values.internal.enable }}"
+            - "--internal.address={{ .Values.internal.address }}"
+            - "--internal.port={{ .Values.internal.port }}"
+            - "--internal.health={{ .Values.internal.health }}"
+            - "--internal.readiness={{ .Values.internal.readiness }}"
+
+            - "--config.source={{ .Values.config.source }}"
+            - "--config.file={{ .Values.config.file }}"
+            - "--config.secret.file={{ .Values.config.secret.file }}"
+            - "--app.id={{ .Values.config.appId }}"
+
+            - "--logging.level={{ .Values.logging.level }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.httpPort }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.service.grpcPort }}
+              protocol: TCP
+            - name: internal
+              containerPort: {{ .Values.service.healthPort }}
+              protocol: TCP
+          env:
+            - name: "DATABASE_ADDRESS"
+              value: {{ tpl .Values.db.server . }}
+            - name: "DATABASE_PASSWORD"
+              value: {{ .Values.db.password }}
+            - name: "DATABASE_USER"
+              value: {{ .Values.db.username }}
+            - name: "DATABASE_NAME"
+              value: {{ .Values.db.database }}
+            - name: "dsn"
+              value: postgres://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_ADDRESS):5432/$(DATABASE_NAME)?sslmode={{ .Values.db.sslMode }}
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ready
+          #     port: internal
+          #     scheme: HTTP
+          #   initialDelaySeconds: 2
+          #   periodSeconds: 5
+          #   successThreshold: 1
+          #   failureThreshold: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: internal
+          #     scheme: HTTP
+          #   initialDelaySeconds: 3
+          #   timeoutSeconds: 10
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
