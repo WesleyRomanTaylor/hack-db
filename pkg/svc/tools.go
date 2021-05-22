@@ -100,19 +100,23 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 	// Populate tags[] field for each tool
 	for _, tool := range toolSlice {
 		var t = tool
-		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, tool.GetId().GetValue())).Rows()
+		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT * from tags WHERE '%s'=ANY(tool_id)`, tool.GetId().GetValue())).Rows()
 		if err != nil {
 			return nil, err
 		}
 		defer tagRows.Close()
 		tagSlice := []string{}
 		for tagRows.Next() {
-			var tag string
+			tagORM := &pb.TagORM{}
 			if err := txn.ScanRows(tagRows, tag); err != nil {
 				return nil, err
 			}
-			logrus.Infof("Tag %v found for tool %v\r\n", tag, tool.Title)
-			tagSlice = append(tagSlice, tag)
+			tag, err := tagORM.ToPB(ctx)
+			if err != nil {
+				return nil, err
+			}
+			logrus.Infof("Tag %v found for tool %v\r\n", tag.GetName(), tool.Title)
+			tagSlice = append(tagSlice, tag.GetName())
 		}
 		logrus.Infof("Tags: %v", tagSlice)
 		t.Tags = tagSlice
