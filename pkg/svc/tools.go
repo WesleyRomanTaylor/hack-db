@@ -4,10 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/sirupsen/logrus"
-
 	"github.com/brocwoodworthIBLX/hack-db/pkg/pb"
 	tkgorm "github.com/infobloxopen/atlas-app-toolkit/gorm"
+	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -94,25 +93,28 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 		if err != nil {
 			return nil, err
 		}
+		toolSlice = append(toolSlice, &t)
+	}
+	logrus.Infof("Tools: %v\r\n", toolSlice)
 
-		// Populate tags[] field (nested loop here we gooooo)
-		logrus.Infof("Tag sql query...\r\n")
-		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT * from tags WHERE '%s'=ANY(tool_id)`, t.GetId())).Rows()
+	// Populate tags[] field for each tool
+	for _, tool := range toolSlice {
+		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, tool.GetId())).Rows()
 		if err != nil {
 			return nil, err
 		}
+		defer tagRows.Close()
 		tagSlice := []string{}
 		for tagRows.Next() {
-			logrus.Infof("Inner loop, iterating...\r\n")
-			var tag pb.Tag
+			var tag string
 			if err := txn.ScanRows(tagRows, tag); err != nil {
 				return nil, err
 			}
-			tagSlice = append(tagSlice, tag.GetName())
+			tagSlice = append(tagSlice, tag)
 		}
-		t.Tags = tagSlice
-		toolSlice = append(toolSlice, &t)
+		tool.Tags = tagSlice
 	}
+	logrus.Infof("Tools: %v\r\n", toolSlice)
 
 	return &pb.ListToolResponse{Results: toolSlice}, nil
 }
