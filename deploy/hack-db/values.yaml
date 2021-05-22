@@ -1,0 +1,84 @@
+
+migrate:
+  image: infoblox/migrate
+  tag: v1.0.0
+
+postgres:
+  enabled: false
+
+image:
+  repository: infobloxcto/hack-db
+  tag:
+  pullPolicy: Always
+
+service:
+  healthPort: 8081
+  grpcPort: 9090
+  httpPort: 8080
+
+resources: {}
+
+ingress:
+  enabled: true
+  http:
+    path: /hack-db/?(.*)
+  authURL: "http://identity-api.identity.svc.cluster.local/v2/session/verify"
+  authResponseHeaders: Authorization,Request-Id
+  limitRps: 50
+  rewriteTarget: /$1
+  host: "{{ tpl .Values.host.csp.domain . }}"
+  tls: {}
+
+notifications:
+  hackdb:
+    serviceName: "hackdb"
+    grpcPort: "9090"
+    httpPort: "8080"
+    matchServiceLabel: "hackdb"
+
+zone: test.infoblox.com
+host:
+  csp:
+    domain: "{{ .Values.env }}.{{ .Values.zone }}"
+
+server:
+  address: "0.0.0.0"
+  port: "9090"
+
+gateway:
+  enable: true
+  address: "0.0.0.0"
+  port: "8080"
+  endpoint: "/v1/"
+  swaggerFile: "pkg/pb/service.swagger.json"
+
+db:
+  enable: true
+  type: "postgres"
+  address: "csp-env-1.cf1k7otqh6nf.us-east-1.rds.amazonaws.com"
+  port: "5432"
+  database: hackathon001
+  username: hackathon001_user
+  password: hackathon001_30-thursday
+  sslMode: disable
+  option: ""
+  logging: true
+  server: "csp-env-1.cf1k7otqh6nf.us-east-1.rds.amazonaws.com"
+  # "{{ include \"hackdb.fullname\" . }}-postgres.{{ .Release.Namespace }}"
+
+internal:
+  enable: true
+  address: "0.0.0.0"
+  port: "8081"
+  health: "/health"
+  readiness: "/ready"
+
+config:
+  source: "deploy/"
+  file: ""
+  secret:
+    file: ""
+  appId: "hackdb"
+
+logging:
+  level: "info"

@@ -61,7 +61,7 @@ func NewGRPCServer(logger *logrus.Logger, dbConnectionString string) (*grpc.Serv
 		),
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(interceptors...)))
 
-	pb.RegisterSubmissionsServer(grpcServer, &svc.SubmissionsCustomServer{})
+	pb.RegisterToolsServer(grpcServer, &svc.ToolsCustomServer{})
 
 	return grpcServer, nil
 }
