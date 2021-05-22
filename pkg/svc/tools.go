@@ -99,7 +99,7 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 
 	// Populate tags[] field for each tool
 	for _, tool := range toolSlice {
-		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, tool.GetId())).Rows()
+		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, tool.GetId().GetValue())).Rows()
 		if err != nil {
 			return nil, err
 		}
