@@ -1,9 +1,11 @@
-<div style="margin-left: 30px; margin-right: 30px;">
-  <mat-toolbar>
-    <!--  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">-->
-    <!--    <mat-icon>menu</mat-icon>-->
-    <!--  </button>-->
-    <span>Bash Share</span>
-  </mat-toolbar>
-  <router-outlet></router-outlet>
-</div>
+<mat-toolbar>
+  <!--  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">-->
+  <!--    <mat-icon>menu</mat-icon>-->
+  <!--  </button>-->
+  <span>Bash Share</span>
+</mat-toolbar>
+  <button mat-raised-button color="primary" aria-label="Add a new tool" class="add-btn" (click)="openDialog()">
+    <!--      <mat-icon>add</mat-icon>-->
+    Add
+  </button>
+<router-outlet></router-outlet>

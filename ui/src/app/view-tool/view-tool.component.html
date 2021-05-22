@@ -1,0 +1,45 @@
+<mat-grid-list cols="2">
+  <h1>View {{tool.title}}</h1>
+  <mat-grid-tile>
+    <div>
+      <div>Description: {{tool.description}}</div>
+      <div>Tags: <!--{{tool.tags}}--></div>
+      <mat-chip-list aria-label="tags"> <!-- ng for loop to go over tools.tags -->
+        <mat-chip *ngFor="let t of tool.tags">{{t}}</mat-chip>
+      </mat-chip-list>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile style="background-color: aqua">
+    <div>Code:</div>
+    <code>
+      {{tool.content}}
+    </code>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div>
+      <h2>Comments:</h2>
+        <mat-form-field appearance="fill" id="comment_input" >
+          <mat-label>add a comment</mat-label>
+          <textarea matInput [(ngModel)]="comment"></textarea>
+        </mat-form-field>
+      <div>
+        <button mat-raised-button color="primary" aria-label="Add a comment" class="add-btn" (click)="addComment()">
+          <!--      <mat-icon>add</mat-icon>-->
+          Add comment
+        </button>
+      </div>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div>
+      <mat-list>
+        <mat-list-item *ngFor="let ds of dataSource">{{ds.comment}}</mat-list-item>
+      </mat-list>
+    </div>
+  </mat-grid-tile>
+
+</mat-grid-list>
+
+
+
+

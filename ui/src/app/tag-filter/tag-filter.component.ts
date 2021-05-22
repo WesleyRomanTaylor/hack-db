@@ -5,6 +5,17 @@ import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/a
 import {MatChipInputEvent} from '@angular/material/chips';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {TagModel} from "../model/tag.model";
+import {Tag} from "@angular/compiler/src/i18n/serializers/xml_helper";
+
+const TAG_DATA = [
+  {id: "1", tag:'Bash'},
+  {id: "2", tag:"Entitlement"},
+  {id: "3", tag:"Atlas"},
+  {id: "4", tag:"Identity"},
+  {id: "5", tag:"teleport"},
+  {id: "6", tag:"kubernetes"}
+]
 
 @Component({
   selector: 'tag-filter',
@@ -16,52 +27,52 @@ export class TagFilterComponent {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruitCtrl = new FormControl();
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  tagCtrl = new FormControl();
+  filteredTags: Observable<TagModel[]>;
+  tags: string[] = [];
+  alltags: TagModel[] = TAG_DATA;
 
-  @ViewChild('fruitInput') fruitInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('fruitInput') tagInput?: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete?: MatAutocomplete;
 
   constructor() {
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
-      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+      map((tag: string | null) => tag ? this._filter(tag) : this.alltags.slice()));
   }
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
+    // Add our tag
     if (value) {
-      this.fruits.push(value);
+      this.tags.push(value);
     }
 
     // Clear the input value
     event.chipInput!.clear();
 
-    this.fruitCtrl.setValue(null);
+    this.tagCtrl.setValue(null);
   }
 
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
+  remove(tag: string): void {
+    const index = this.tags.indexOf(tag);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.tags.splice(index, 1);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
+    this.tags.push(event.option.viewValue);
     // @ts-ignore
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value: string): TagModel[] {
     const filterValue = value.toLowerCase();
 
-    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+    return this.alltags.filter(tag => tag["tag"].toLowerCase().indexOf(filterValue) === 0);
   }
 }
