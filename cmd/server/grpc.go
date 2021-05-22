@@ -62,6 +62,8 @@ func NewGRPCServer(logger *logrus.Logger, dbConnectionString string) (*grpc.Serv
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(interceptors...)))
 
 	pb.RegisterToolsServer(grpcServer, &svc.ToolsCustomServer{})
+	pb.RegisterTagsServer(grpcServer, &pb.TagsDefaultServer{})
+	pb.RegisterCommentsServer(grpcServer, &pb.CommentsDefaultServer{})
 
 	return grpcServer, nil
 }
