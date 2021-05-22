@@ -98,7 +98,7 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 	returnSlice := []*pb.Tool{}
 	// Populate tags[] field for each tool
 	for _, tool := range toolSlice {
-		var t *pb.Tool = tool
+		var t = tool
 		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, tool.GetId().GetValue())).Rows()
 		if err != nil {
 			return nil, err
@@ -112,8 +112,8 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 			}
 			tagSlice = append(tagSlice, tag)
 		}
-		tool.Tags = tagSlice
-		returnSlice = append(returnSlice, tool)
+		t.Tags = tagSlice
+		returnSlice = append(returnSlice, t)
 	}
 
 	return &pb.ListToolResponse{Results: toolSlice}, nil
