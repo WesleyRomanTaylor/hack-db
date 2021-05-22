@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/brocwoodworthIBLX/hack-db/pkg/pb"
 	tkgorm "github.com/infobloxopen/atlas-app-toolkit/gorm"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -115,10 +114,8 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 			if err != nil {
 				return nil, err
 			}
-			logrus.Infof("Tag %v found for tool %v\r\n", tag.GetName(), tool.Title)
 			tagSlice = append(tagSlice, tag.GetName())
 		}
-		logrus.Infof("Tags: %v", tagSlice)
 		t.Tags = tagSlice
 		returnSlice = append(returnSlice, t)
 	}
