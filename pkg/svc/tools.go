@@ -97,18 +97,18 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 
 		// Populate tags[] field (nested loop here we gooooo)
 		logrus.Infof("Tag sql query...\r\n")
-		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, t.Id)).Rows()
+		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT * from tags WHERE '%s'=ANY(tool_id)`, t.GetId())).Rows()
 		if err != nil {
 			return nil, err
 		}
 		tagSlice := []string{}
 		for tagRows.Next() {
 			logrus.Infof("Inner loop, iterating...\r\n")
-			var tag string
+			var tag pb.Tag
 			if err := txn.ScanRows(tagRows, tag); err != nil {
 				return nil, err
 			}
-			tagSlice = append(tagSlice, tag)
+			tagSlice = append(tagSlice, tag.GetName())
 		}
 		t.Tags = tagSlice
 		toolSlice = append(toolSlice, &t)
