@@ -116,5 +116,5 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 		returnSlice = append(returnSlice, t)
 	}
 
-	return &pb.ListToolResponse{Results: toolSlice}, nil
+	return &pb.ListToolResponse{Results: returnSlice}, nil
 }
