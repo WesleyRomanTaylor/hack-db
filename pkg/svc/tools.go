@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/brocwoodworthIBLX/hack-db/pkg/pb"
 	tkgorm "github.com/infobloxopen/atlas-app-toolkit/gorm"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
