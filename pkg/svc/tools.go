@@ -108,7 +108,7 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 		tagSlice := []string{}
 		for tagRows.Next() {
 			tagORM := &pb.TagORM{}
-			if err := txn.ScanRows(tagRows, tag); err != nil {
+			if err := txn.ScanRows(tagRows, tagORM); err != nil {
 				return nil, err
 			}
 			tag, err := tagORM.ToPB(ctx)
