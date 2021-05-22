@@ -111,6 +111,7 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 			if err := txn.ScanRows(tagRows, tag); err != nil {
 				return nil, err
 			}
+			logrus.Infof("Tag %v found for tool %v\r\n", tag, tool.Title)
 			tagSlice = append(tagSlice, tag)
 		}
 		logrus.Infof("Tags: %v", tagSlice)
