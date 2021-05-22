@@ -37,10 +37,7 @@ It has these top-level messages:
 */
 package pb
 
-import (
-	context "context"
-	"github.com/sirupsen/logrus"
-)
+import context "context"
 import fmt "fmt"
 
 import errors1 "github.com/infobloxopen/protoc-gen-gorm/errors"
@@ -1414,7 +1411,6 @@ func (m *ToolsDefaultServer) Create(ctx context.Context, in *CreateToolRequest) 
 	if !ok {
 		return nil, errors1.NoTransactionError
 	}
-	logrus.Infof("PAYLOAD: %s\r\n", in.GetPayload())
 	db := txn.Begin()
 	if db.Error != nil {
 		return nil, db.Error

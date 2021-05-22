@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
 
 	"github.com/brocwoodworthIBLX/hack-db/pkg/pb"
 	tkgorm "github.com/infobloxopen/atlas-app-toolkit/gorm"
@@ -43,12 +44,14 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 	// Pagination
 	txn = tkgorm.ApplyPagination(ctx, txn, req.GetPaging())
 
+	logrus.Infof("Filtering...\r\n")
 	// Filtering
 	filterStr, _, _, err := tkgorm.FilteringToGorm(ctx, req.GetFilter(), &pb.ToolORM{}, &pb.Tool{})
 	if err != nil {
 		return nil, err
 	}
 
+	logrus.Infof("Order By...\r\n")
 	// ORDER BY
 	trs := []string{}
 	for _, sc := range req.GetOrderBy().GetCriterias() {
@@ -77,14 +80,17 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 	if len(filterStr) > 0 {
 		filterStr = fmt.Sprintf("WHERE %s", filterStr)
 	}
+	logrus.Infof("Sql Query...\r\n")
 	rows, err := txn.Raw(fmt.Sprintf(`SELECT * from tools %s %s`, filterStr, orderStr)).Rows()
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
+	logrus.Infof("Entering outer loop...\r\n")
 	toolSlice := []*pb.Tool{}
 	for rows.Next() {
+		logrus.Infof("Outer loop, iterating...\r\n")
 		toolORM := &pb.ToolORM{}
 		if err := txn.ScanRows(rows, toolORM); err != nil {
 			return nil, err
@@ -95,9 +101,11 @@ func (tcs ToolsCustomServer) List(ctx context.Context, req *pb.ListToolRequest) 
 		}
 
 		// Populate tags[] field (nested loop here we gooooo)
+		logrus.Infof("Tag sql query...\r\n")
 		tagRows, err := txn.Raw(fmt.Sprintf(`SELECT name from tags WHERE '%s'=ANY(tool_id)`, t.Id)).Rows()
 		tagSlice := []string{}
 		for tagRows.Next() {
+			logrus.Infof("Inner loop, iterating...\r\n")
 			var tag string
 			if err := txn.ScanRows(tagRows, tag); err != nil {
 				return nil, err
