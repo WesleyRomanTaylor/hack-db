@@ -1,0 +1,8 @@
+{
+  "/hack-db/v1/*": {
+    "target": "https://env-1.test.infoblox.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

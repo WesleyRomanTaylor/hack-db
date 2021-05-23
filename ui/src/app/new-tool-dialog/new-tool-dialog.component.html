@@ -1,1 +1,41 @@
-<p>new-tool-dialog works!</p>
+<div class="new-tool-container">
+  <div>
+    <mat-form-field appearance="standard" style="width: 500px;">
+      <mat-label>Title</mat-label>
+      <input matInput [(ngModel)]="title">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field class="tags-list">
+      <mat-label>Tags</mat-label>
+      <mat-chip-list #chipList aria-label="Tags">
+        <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                  [removable]="removable" (removed)="remove(tag)">
+          {{tag}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="New tag..."
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+  <div style="width: 100%;">
+    <mat-form-field appearance="fill" style="width: 100%;">
+      <mat-label>Content</mat-label>
+      <textarea matInput rows="20" [(ngModel)]="content"></textarea>
+    </mat-form-field>
+  </div>
+  <div style="width: 100%;">
+    <mat-form-field appearance="standard" style="width: 100%;">
+      <mat-label>Description</mat-label>
+      <textarea matInput [(ngModel)]="desc"></textarea>
+    </mat-form-field>
+  </div>
+  <div style="text-align: right;">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+  </div>
+</div>

@@ -11,7 +11,7 @@
     <!-- Tags Column -->
     <ng-container matColumnDef="tags">
       <th mat-header-cell *matHeaderCellDef> Tags </th>
-      <td mat-cell *matCellDef="let element"> {{element.tags.join(",")}} </td>
+      <td mat-cell *matCellDef="let element"> {{(element.tags && element.tags.length > 0) ? element.tags.join(","): ''}} </td>
     </ng-container>
 
     <!-- Created By Column -->
@@ -50,3 +50,7 @@
                  [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
 </div>
+<a mat-raised-button color="primary" aria-label="Add a new tool" class="add-btn" routerLink="/new">
+  <!--      <mat-icon>add</mat-icon>-->
+  Add
+</a>
