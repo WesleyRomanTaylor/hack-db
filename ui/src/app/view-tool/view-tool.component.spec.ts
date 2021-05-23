@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ViewToolComponent } from './view-tool.component';
 
 describe('ViewToolComponent', () => {

@@ -5,8 +5,7 @@ import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ToolService} from "../service/tool.service";
 import {CommentService} from "../service/comment.service";
-
-
+import {CommentModel} from "../model/comment.model";
 
 
 @Component({
@@ -19,7 +18,7 @@ export class ViewToolComponent implements OnInit {
   toolCtrl = new FormControl();
   tool: ToolModel;
   comment: string;
-  dataSource: any = []
+  dataSource: CommentModel[]= []
   constructor(@Inject(MAT_DIALOG_DATA) selectedTool : ToolModel, public commentService: CommentService) {
     this.tool = selectedTool
     this.comment = '';
@@ -33,15 +32,21 @@ export class ViewToolComponent implements OnInit {
           this.dataSource = data;
         });
     }
+    console.log(this.tool)
   }
 
   addComment(): void {
       if (this.comment.length > 0 && this.tool.id) {
-        this.dataSource.push({comment: this.comment});
+        this.dataSource.push({comment: this.comment, created_by: "person"});
         this.commentService.addComment(this.tool.id, this.comment, "person")
       }
       this.comment = '';
       console.log(this.dataSource)
   }
 
+  copyToClipboard():void{
+    navigator.clipboard.writeText(this.tool.tool_code)
+  }
+
 }
+

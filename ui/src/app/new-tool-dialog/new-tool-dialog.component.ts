@@ -51,7 +51,7 @@ export class NewToolDialogComponent implements OnInit {
     this.toolService.saveTool(
       {
         title: this.title,
-        content: this.content,
+        tool_code: this.content,
         description: this.desc,
         created_by: 'User1',
         tags: this.tags

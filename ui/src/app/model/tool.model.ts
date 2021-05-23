@@ -3,7 +3,7 @@ import {TagModel} from "./tag.model";
 export class ToolModel {
   id?: string;
   title: string;
-  content: string;
+  tool_code: string;
   created_by: string;
   description: string;
   tags: string[];
@@ -12,7 +12,7 @@ export class ToolModel {
 
   constructor(
     title: string,
-    content: string,
+    tool_code: string,
     created_by: string,
     description: string,
     tags: string[],
@@ -22,7 +22,7 @@ export class ToolModel {
 ) {
     if(id) this.id = id;
     this.title = title;
-    this.content = content;
+    this.tool_code = tool_code;
     this.created_by = created_by;
     this.description = description;
     this.tags = tags;

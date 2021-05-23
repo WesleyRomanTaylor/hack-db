@@ -1,0 +1,16 @@
+.tool-content{
+  background: lightgrey;
+  width: 100%;
+  min-height: 150px;
+}
+
+
+.add-comment-input{
+  background: lightgrey;
+  width: 100%;
+  min-height: 150px
+}
+
+.given-comment{
+  border: solid lightgrey 1px;
+}

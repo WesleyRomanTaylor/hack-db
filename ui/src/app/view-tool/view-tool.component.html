@@ -1,60 +1,41 @@
 <h1>{{tool.title}}</h1>
-<div style="width: 100%;">
-  <code>{{tool.content}}</code>
+<div class="tool-content" id="tool-code">
+  <code>{{tool.tool_code}}</code>
 </div>
-<mat-form-field appearance="fill" id="comment_input">
-  <mat-label>add a comment</mat-label>
-  <textarea matInput [(ngModel)]="comment"></textarea>
-</mat-form-field>
+<div style="text-align: right">
+  <button mat-raised-button color="primary" aria-label="Add a comment" (click)="copyToClipboard()">
+    copy to clipboard
+  </button>
+</div>
 <div>
-  <button mat-raised-button color="primary" aria-label="Add a comment" class="add-btn" (click)="addComment()">
-    <!--      <mat-icon>add</mat-icon>-->
+  <h4>Tags</h4>
+  <mat-chip-list aria-label="tags"> <!-- ng for loop to go over tools.tags -->
+    <mat-chip *ngFor="let t of tool.tags">{{t}}</mat-chip>
+  </mat-chip-list>
+</div>
+<div>
+  <h4>Comments</h4>
+</div>
+<div>
+  <mat-form-field appearance="fill" style="width:100%">
+    <mat-label>add a comment</mat-label>
+    <textarea matInput [(ngModel)]="comment"></textarea>
+  </mat-form-field>
+</div>
+<div style="text-align: right;">
+  <button mat-raised-button color="secondary" aria-label="Add a comment" (click)="addComment()">
     Add comment
   </button>
-  <mat-list>
-    <mat-list-item *ngFor="let ds of dataSource">{{ds.comment}}</mat-list-item>
+</div>
+<div>
+  <mat-list *ngFor="let ds of dataSource">
+    <div class="given-comment">
+      <mat-list-item>
+        "{{ds.comment}}"
+      </mat-list-item>
+    </div>
   </mat-list>
-  <!--<mat-grid-list cols="2">-->
-  <!--  <h1>View {{tool.title}}</h1>-->
-  <!--  <mat-grid-tile>-->
-  <!--    <div>-->
-  <!--      <div>Description: {{tool.description}}</div>-->
-  <!--      <div>Tags: &lt;!&ndash;{{tool.tags}}&ndash;&gt;</div>-->
-  <!--      <mat-chip-list aria-label="tags"> &lt;!&ndash; ng for loop to go over tools.tags &ndash;&gt;-->
-  <!--        <mat-chip *ngFor="let t of tool.tags">{{t}}</mat-chip>-->
-  <!--      </mat-chip-list>-->
-  <!--    </div>-->
-  <!--  </mat-grid-tile>-->
-  <!--  <mat-grid-tile style="background-color: aqua">-->
-  <!--    <div>Code:</div>-->
-  <!--    <code>-->
-  <!--      {{tool.content}}-->
-  <!--    </code>-->
-  <!--  </mat-grid-tile>-->
-  <!--  <mat-grid-tile>-->
-  <!--    <div>-->
-  <!--      <h2>Comments:</h2>-->
-  <!--        <mat-form-field appearance="fill" id="comment_input" >-->
-  <!--          <mat-label>add a comment</mat-label>-->
-  <!--          <textarea matInput [(ngModel)]="comment"></textarea>-->
-  <!--        </mat-form-field>-->
-  <!--      <div>-->
-  <!--        <button mat-raised-button color="primary" aria-label="Add a comment" class="add-btn" (click)="addComment()">-->
-  <!--          &lt;!&ndash;      <mat-icon>add</mat-icon>&ndash;&gt;-->
-  <!--          Add comment-->
-  <!--        </button>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </mat-grid-tile>-->
-  <!--  <mat-grid-tile>-->
-  <!--    <div>-->
-  <!--      <mat-list>-->
-  <!--        <mat-list-item *ngFor="let ds of dataSource">{{ds.comment}}</mat-list-item>-->
-  <!--      </mat-list>-->
-  <!--    </div>-->
-  <!--  </mat-grid-tile>-->
-
-  <!--</mat-grid-list>-->
+</div>
 
 
 
