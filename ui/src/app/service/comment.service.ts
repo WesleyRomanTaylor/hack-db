@@ -9,7 +9,7 @@ import {map} from "rxjs/operators";
 })
 export class CommentService {
   private commentsUrl = '/hack-db/v1/comment';
-  private token = 'Token token=<INSERT_API_TOKEN>';
+  private token = 'Token token=b4b2c7ea0d724cc3ac38686aac86a6b8';
   private headers = new HttpHeaders({Authorization: this.token})
 
   constructor(public http: HttpClient) {

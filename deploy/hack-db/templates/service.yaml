@@ -22,3 +22,26 @@ spec:
   selector:
     name: {{ include "hackdb.name" . }}
     release: {{ .Release.Name }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.notifications.hackdb.serviceName }}-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ include "hackdb.name" . }}-ui
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    promlabel: {{ tpl .Values.notifications.hackdb.matchServiceLabel . }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 4200
+      protocol: TCP
+      name: http
+  selector:
+    name: {{ include "hackdb.name" . }}-ui
+    release: {{ .Release.Name }}

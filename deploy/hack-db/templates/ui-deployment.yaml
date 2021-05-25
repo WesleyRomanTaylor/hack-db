@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hackdb.fullname" . }}-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ include "hackdb.name" . }}-ui
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ include "hackdb.name" . }}-ui
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        name: {{ include "hackdb.name" . }}-ui
+        release: {{ .Release.Name }}
+        application: {{ tpl .Values.config.appId . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-ui
+          image: wesleyromantaylor/hack-db-angular-app:v0.0.3
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: {{ .Values.ui.service.httpPort }}
+              protocol: TCP
+          resources:
+  {{ toYaml .Values.resources | indent 12 }}

@@ -3,3 +3,5 @@ appVersion: "1.0"
 description: A Helm chart for Kubernetes
 name: hack-db
 version: 0.0.1
+
+ui-version: v0.0.0

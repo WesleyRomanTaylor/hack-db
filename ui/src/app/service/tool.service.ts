@@ -10,7 +10,7 @@ import {map} from "rxjs/operators";
 })
 export class ToolService {
   private toolUrl = '/hack-db/v1/tool';
-  private token = 'Token token=<INSERT_TOKEN_HERE>';
+  private token = "Token token=b4b2c7ea0d724cc3ac38686aac86a6b8";
   private headers = new HttpHeaders({Authorization: this.token})
 
   constructor(public http: HttpClient) {
